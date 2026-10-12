@@ -1,35 +1,399 @@
-﻿<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eeeae1">
+  <meta name="description" content="一頁帶著撕裂感與錯位排版的實驗性個人網頁。">
+  <title>chlworks — 故障是一種風格</title>
+  <style>
+    :root {
+      --paper: #eeeae1;
+      --ink: #171717;
+      --red: #e3382b;
+      --blue: #2938b8;
+      --line: #aaa69f;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Arial Black", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+    button { font: inherit; }
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--blue); outline-offset: 5px; }
+    ::selection { background: var(--red); color: white; }
+
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.15rem clamp(1.2rem, 4vw, 4rem);
+      border-bottom: 2px solid var(--ink);
+      font-size: .9rem;
+      font-weight: 900;
+    }
+    .brand { text-decoration: none; letter-spacing: -.06em; }
+    .brand span { color: var(--red); }
+    .site-header nav { display: flex; gap: 1.6rem; }
+    .site-header nav a { text-decoration-thickness: 2px; text-underline-offset: 5px; }
+
+    main { overflow: hidden; }
+    .hero {
+      position: relative;
+      min-height: min(760px, 82vh);
+      display: flex;
+      align-items: center;
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.2rem, 4vw, 4rem);
+      isolation: isolate;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 13%; right: -4%;
+      width: min(47vw, 670px);
+      height: 72%;
+      background: var(--red);
+      clip-path: polygon(10% 0, 100% 5%, 88% 29%, 100% 47%, 84% 100%, 0 89%, 13% 65%, 0 34%);
+      transform: rotate(-6deg);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: min(65vw, 900px);
+      height: 2px;
+      background: var(--ink);
+      top: 55%; left: 38%;
+      transform: rotate(-25deg);
+    }
+    .hero-copy { width: 100%; max-width: 1280px; margin: 0 auto; }
+    .hero-kicker {
+      display: inline-block;
+      margin: 0 0 2rem;
+      padding: .45rem .65rem;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      font-size: clamp(.8rem, 1.2vw, 1rem);
+      font-weight: 900;
+      transform: rotate(-3deg);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(4.8rem, 12.7vw, 12.5rem);
+      line-height: .84;
+      letter-spacing: -.11em;
+      font-weight: 1000;
+    }
+    h1 span { display: block; width: max-content; max-width: 100%; }
+    h1 .shift {
+      position: relative;
+      margin-left: clamp(1.5rem, 12vw, 11rem);
+      color: var(--paper);
+      -webkit-text-stroke: clamp(2px, .3vw, 4px) var(--ink);
+      transform: rotate(-4deg);
+    }
+    h1 .shift::after {
+      content: "";
+      position: absolute;
+      left: 1%; right: -3%; top: 54%;
+      height: clamp(7px, 1.1vw, 15px);
+      background: var(--blue);
+      transform: rotate(5deg);
+      mix-blend-mode: multiply;
+    }
+    .hero-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 2rem;
+      margin-top: clamp(3rem, 7vw, 6rem);
+      max-width: 900px;
+    }
+    .hero-bottom p {
+      max-width: 21em;
+      margin: 0;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-size: clamp(1rem, 1.8vw, 1.35rem);
+      line-height: 1.6;
+      font-weight: 700;
+    }
+    .chaos-button {
+      flex: none;
+      padding: .95rem 1.25rem;
+      border: 2px solid var(--ink);
+      background: var(--ink);
+      color: white;
+      cursor: pointer;
+      box-shadow: 7px 7px 0 var(--blue);
+      transform: rotate(2deg);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .chaos-button:hover { transform: rotate(-2deg) translateY(-3px); box-shadow: 10px 10px 0 var(--blue); }
+
+    .ticker {
+      display: flex;
+      gap: 2rem;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: .9rem 0;
+      border-block: 2px solid var(--ink);
+      background: var(--blue);
+      color: white;
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      font-weight: 900;
+      letter-spacing: -.03em;
+      transform: rotate(-1.5deg) scale(1.03);
+    }
+    .ticker span { flex: none; }
+    .about {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: clamp(2rem, 7vw, 8rem);
+      padding: clamp(6rem, 11vw, 11rem) clamp(1.2rem, 4vw, 4rem);
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    .about h2 {
+      margin: 0;
+      font-size: clamp(3.5rem, 7vw, 7rem);
+      line-height: .95;
+      letter-spacing: -.09em;
+    }
+    .about h2 span { display: block; color: var(--red); transform: rotate(-4deg); transform-origin: left center; }
+    .about-copy {
+      align-self: end;
+      padding-top: 2rem;
+      border-top: 2px solid var(--ink);
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-size: clamp(1.1rem, 1.8vw, 1.45rem);
+      line-height: 1.8;
+      font-weight: 600;
+    }
+    .about-copy p { max-width: 30em; margin: 0 0 1.2rem; }
+    .about-copy p:last-child { margin-bottom: 0; }
+    .works {
+      padding: clamp(4rem, 8vw, 8rem) clamp(1.2rem, 4vw, 4rem);
+      border-top: 2px solid var(--ink);
+    }
+    .works-inner { max-width: 1440px; margin: 0 auto; }
+    .works h2 {
+      margin: 0 0 clamp(2rem, 5vw, 4rem);
+      font-size: clamp(3.5rem, 8vw, 8rem);
+      line-height: .95;
+      letter-spacing: -.09em;
+    }
+    .work-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) auto;
+      align-items: center;
+      gap: clamp(1rem, 3vw, 3rem);
+      padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+      border-top: 2px solid var(--ink);
+    }
+    .work-item:last-child { border-bottom: 2px solid var(--ink); }
+    .work-platform {
+      display: block;
+      margin-bottom: .5rem;
+      color: var(--blue);
+      font-size: .85rem;
+      font-weight: 900;
+    }
+    .work-item h3 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2.5vw, 2.6rem);
+      line-height: 1.2;
+      letter-spacing: -.06em;
+    }
+    .work-item p {
+      max-width: 27em;
+      margin: 0;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+    .work-item a {
+      padding: .7rem .9rem;
+      border: 2px solid var(--ink);
+      font-size: .9rem;
+      font-weight: 900;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .work-item a:hover { background: var(--ink); color: var(--paper); }
+    .support {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      padding: clamp(2.5rem, 5vw, 5rem) clamp(1.2rem, 4vw, 4rem);
+      border-top: 2px solid var(--ink);
+      background: var(--red);
+      color: var(--ink);
+    }
+    .support h2 {
+      margin: 0 0 .65rem;
+      font-size: clamp(2.2rem, 5vw, 5rem);
+      line-height: 1;
+      letter-spacing: -.08em;
+    }
+    .support p {
+      max-width: 34em;
+      margin: 0;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+    .support a {
+      flex: none;
+      display: inline-block;
+      padding: 1rem 1.3rem;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 7px 7px 0 var(--ink);
+      transform: rotate(-2deg);
+    }
+    .support a:hover { text-decoration: underline; text-underline-offset: 4px; }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.5rem clamp(1.2rem, 4vw, 4rem);
+      border-top: 2px solid var(--ink);
+      font-size: .85rem;
+      font-weight: 900;
+    }
+
+    body.chaos .hero::before { transform: rotate(10deg) translate(3%, -4%); }
+    body.chaos h1 > span:first-child { transform: rotate(5deg) translateX(-1.5%); }
+    body.chaos h1 .shift { transform: rotate(8deg) translate(4%, -5%); }
+    body.chaos .ticker { transform: rotate(3deg) scale(1.08); }
+    body.chaos .about h2 span { transform: rotate(8deg) translateX(6%); }
+    body.chaos .chaos-button { background: var(--red); box-shadow: 7px 7px 0 var(--ink); }
+    .hero::before, h1 span, .ticker, .about h2 span { transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+
+    @media (max-width: 720px) {
+      .site-header { font-size: .8rem; }
+      .site-header nav { gap: 1rem; }
+      .hero { min-height: 680px; align-items: center; }
+      .hero::before { width: 70vw; height: 48%; top: 23%; right: -14%; }
+      .hero::after { top: 46%; left: 22%; width: 100vw; }
+      h1 { font-size: clamp(4.1rem, 16vw, 8rem); }
+      h1 .shift { margin-left: 1rem; }
+      .hero-bottom { align-items: start; flex-direction: column; }
+      .about { grid-template-columns: 1fr; }
+      .about-copy { padding-top: 1.2rem; }
+      .work-item { grid-template-columns: 1fr; gap: .8rem; }
+      .work-item a { justify-self: start; margin-top: .3rem; }
+      .support { align-items: start; flex-direction: column; }
+    }
+    @media (max-width: 390px) {
+      h1 { font-size: 16vw; }
+      .hero { min-height: 620px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
 <body>
-<br><br>
-<h1>隱私權聲明</h1>
-<br>
- 非常歡迎您使用「APP」（以下簡稱本APP），為了讓您能夠安心使用本APP的各項服務與資訊，特此向您說明本APP的隱私權保護政策，以保障您的權益，請您詳閱下列內容：
-<br><br>
-<br>一、隱私權保護政策的適用範圍<br>
-隱私權保護政策內容，包括本App如何處理在您使用App服務時收集到的個人識別資料。隱私權保護政策不適用於本App以外的相關連結外部網頁，也不適用於非本App所委託或參與管理的人員。<br>
-<br>二、個人資料的蒐集、處理及利用管道<br>
-當您下載本App或使用本App所提供之功能服務時，我們將視該服務功能性質，請您提供必要的個人資料，並在該特定目的範圍內處理及利用您的個人資料； 非經您書面同意，本App不會將個人資料用於其他用途。<br>
-本App在您使用服務信箱、問卷調查等互動性功能時，會保留您所提供的姓名、電子郵寄地址、聯絡方式及使用時間等。<br>
-於一般連線時，伺服器會自行記錄相關行徑，包括您使用連線設備的IP位址、使用時間、使用的作業系統、瀏覽及點選資料記錄等，做為我們增進App服務的參考依據，此記錄為內部應用，决不對外公佈。<br>
-為提供精確的服務，我們會將收集的內容進行統計與分析，分析結果之統計資料或說明文字呈現， 除供內部研究外，我們會視需要公佈統計資料及說明文字，但不涉及特定個人之資料。<br>
-<br>三、資料之保護<br>
-本App主機均設有防火牆、防毒系統等相關的各項資訊安全設備及必要的安全防護措施，加以保護網站及您的個人資料採用嚴格的保護措施， 只由經過授權的人員才能接觸您的個人資料，相關處理人員皆簽有保密合約，如有違反保密義務者，將會受到相關的法律處分。<br>
-如因業務需要有必要委託其他單位提供服務時，本App亦會嚴格要求其遵守保密義務，並且採取必要檢查程式以確定其將確實遵守。<br>
-<br>四、網站對外的相關連結<br>
-本App的網頁提供其他網站的網路連結，您也可經由本App所提供的連結，點選進入其他網站。 但該連結網站不適用本App的隱私權保護政策，您必須參考該連結網站中的隱私權保護政策。<br>
-<br>五、與第三人共用個人資料之政策<br>
-本App絕不會提供、交換、出租或出售任何您的個人資料給其他個人、團體、私人企業或公務機關，但有法律依據或合約義務者，不在此限。 前項但書之情形包括不限於：<br>
-經由您書面同意。<br>
-法律明文規定。<br>
-為免除您生命、身體、自由或財產上之危險。<br>
-與公務機關或學術研究機构合作，基於公共利益為統計或學術研究而有必要，且資料經過提供者處理或蒐集著依其揭露管道無從識別特定之當事人。<br>
-當您在App裏的行為，違反服務條款或可能損害或妨礙App與其他使用者權益或導致任何人遭受損害時，經App管理組織研析揭露您的個人資料是為了辨識、聯絡或採取法律行動所必要者。<br>
-有利於您的權益。<br>
-本App委託廠商協助蒐集、處理或利用您的個人資料時，將對委外廠商或個人善盡監督管理之責。<br>
-<br>六、隱私權保護政策之修正<br>
-本App隱私權保護政策將因應需求隨時進行修正。<br>
- 
-  <br>  
-  </body>
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="chlworks，回到頁首">chl<span>works</span></a>
+    <nav aria-label="主選單">
+      <a href="#works">作品</a>
+      <a href="#about">關於</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="hero-kicker">給不想照著格子走的人</p>
+        <h1 id="hero-title"><span>故障</span><span class="shift">是一種</span><span>風格。</span></h1>
+        <div class="hero-bottom">
+          <p>我把日常的小麻煩做成 Android App 與 Chrome 擴充功能。工具要實用，畫面可以有點脾氣。</p>
+          <button class="chaos-button" id="chaos-toggle" type="button" aria-pressed="false">讓畫面失序 ↗</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-hidden="true">
+      <span>打破排列 ／ 擁抱雜訊 ／ 保持好奇 ／</span>
+      <span>打破排列 ／ 擁抱雜訊 ／ 保持好奇 ／</span>
+      <span>打破排列 ／ 擁抱雜訊 ／ 保持好奇 ／</span>
+    </div>
+
+    <section class="about" id="about" aria-labelledby="about-title">
+      <h2 id="about-title">漂亮的<span>意外。</span></h2>
+      <div class="about-copy">
+        <p>有些東西不必對齊，才會被看見。這裡收集我做的小工具、還沒完成的點子，和偶爾偏離路線的實驗。</p>
+        <p>歡迎逛逛。下一個作品，也許就從一個奇怪的念頭開始。</p>
+      </div>
+    </section>
+
+    <section class="works" id="works" aria-labelledby="works-title">
+      <div class="works-inner">
+        <h2 id="works-title">做出來的東西。</h2>
+        <div class="work-list">
+          <article class="work-item">
+            <div>
+              <span class="work-platform">Android App</span>
+              <h3>哺乳記錄－寶寶餵食記錄</h3>
+            </div>
+            <p>記錄母乳、配方奶和副食品，支援多位寶寶、統計圖表與資料備份。</p>
+            <a href="https://play.google.com/store/apps/details?id=chlapps.babybreastfeedingrecord" target="_blank" rel="noopener noreferrer" aria-label="前往 Google Play 查看哺乳記錄－寶寶餵食記錄">Google Play ↗</a>
+          </article>
+          <article class="work-item">
+            <div>
+              <span class="work-platform">Android App</span>
+              <h3>密碼保</h3>
+            </div>
+            <p>免登入保存密碼與重要資訊，支援分類搜尋、本機加密與自動鎖定。</p>
+            <a href="https://play.google.com/store/apps/details?id=chlapps.passwordsafe" target="_blank" rel="noopener noreferrer" aria-label="前往 Google Play 查看密碼保">Google Play ↗</a>
+          </article>
+          <article class="work-item">
+            <div>
+              <span class="work-platform">Chrome 擴充功能</span>
+              <h3>PicDrop - 圖片快速下載器</h3>
+            </div>
+            <p>將滑鼠移到網頁圖片上，一鍵下載最佳可用版本，並依用途分類儲存。</p>
+            <a href="https://chromewebstore.google.com/detail/picdrop-quick-image-downl/deleebiclcgbbhcofglkhonfbmfgdgam?hl=zh-TW" target="_blank" rel="noopener noreferrer" aria-label="前往 Chrome 線上應用程式商店查看 PicDrop">Chrome 商店 ↗</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="support" aria-labelledby="support-title">
+      <div>
+        <h2 id="support-title">喜歡這些小工具？</h2>
+        <p>歡迎自願請我喝杯咖啡。贊助不會開通 Android App 或 Chrome 擴充功能的付費功能。</p>
+      </div>
+      <a href="https://ko-fi.com/georgeli56" target="_blank" rel="noopener noreferrer">到 Ko-fi 贊助 ↗</a>
+    </section>
+  </main>
+
+  <footer id="bottom">
+    <span>chlworks © <span id="year">2026</span></span>
+    <a href="#top">回到頂端 ↑</a>
+  </footer>
+
+  <script>
+    const toggle = document.querySelector('#chaos-toggle');
+    toggle.addEventListener('click', () => {
+      const active = document.body.classList.toggle('chaos');
+      toggle.setAttribute('aria-pressed', String(active));
+      toggle.textContent = active ? '恢復排列 ↙' : '讓畫面失序 ↗';
+    });
+    document.querySelector('#year').textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
